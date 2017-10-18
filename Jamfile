@@ -575,7 +575,7 @@ lib ssl
 	;
 
 
-lib crypto : : <name>crypto <use>z <conditional>@openssl-lib-path : : <conditional>@openssl-include-path ;
+lib crypto : : <name>crypto <use>z <conditional>@openssl-lib-path  : : <conditional>@openssl-include-path ;
 lib ssl : : <name>ssl <use>crypto <conditional>@openssl-lib-path : : <conditional>@openssl-include-path ;
 
 lib dbghelp : : <name>dbghelp ;
