@@ -815,7 +815,7 @@ namespace aux {
 //		TORRENT_ASSERT(is_single_thread());
 		TORRENT_ASSERT_VAL(ext, ext);
 
-		std::uint32_t const features = ext->implemented_features();
+		feature_flags_t const features = ext->implemented_features();
 
 		m_ses_extensions[plugins_all_idx].push_back(ext);
 
@@ -5413,10 +5413,14 @@ namespace {
 	{
 		TORRENT_ASSERT(is_single_thread());
 
-		if (ec && m_alerts.should_post<portmap_error_alert>())
+		if (ec)
 		{
-			m_alerts.emplace_alert<portmap_error_alert>(mapping
-				, transport, ec);
+			if (m_alerts.should_post<portmap_error_alert>())
+			{
+				m_alerts.emplace_alert<portmap_error_alert>(mapping
+					, transport, ec);
+			}
+			return;
 		}
 
 		// look through our listen sockets to see if this mapping is for one of
@@ -5447,7 +5451,7 @@ namespace {
 			else (*ls)->udp_external_port = port;
 		}
 
-		if (!ec && m_alerts.should_post<portmap_alert>())
+		if (m_alerts.should_post<portmap_alert>())
 		{
 			m_alerts.emplace_alert<portmap_alert>(mapping, port
 				, transport, proto);
